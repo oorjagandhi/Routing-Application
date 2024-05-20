@@ -1,6 +1,9 @@
 package nz.ac.auckland.se281;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -173,19 +176,25 @@ public class MapEngine {
   /**
    * This method is used to build the route between two countries.
    *
-   * @param predecessors The predecessors of the countries.
+   * @param predecessors The predecessors of each country.
    * @param start The start country.
    * @param end The end country.
    * @return The route between the two countries.
    */
   private List<String> buildRoute(Map<String, String> predecessors, String start, String end) {
-    LinkedList<String> route = new LinkedList<>();
+    Deque<String> stack = new ArrayDeque<>();
     String step = end;
 
     // Build the route by backtracking from the end to the start
     while (step != null) {
-      route.addFirst(step);
+      stack.push(step);
       step = predecessors.get(step);
+    }
+
+    // Transfer elements from stack to list
+    List<String> route = new ArrayList<>();
+    while (!stack.isEmpty()) {
+      route.add(stack.pop());
     }
 
     return route;
