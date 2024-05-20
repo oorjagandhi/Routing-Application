@@ -12,7 +12,7 @@ public class MapEngine {
   private Map<String, Country> countriesMap;
   private Map<String, Set<String>> adjacencyMap;
 
-  /** Constructor for the MapEngine class */
+  /** Constructor for the MapEngine class. */
   public MapEngine() {
     // add other code here if you want
     countriesMap = new HashMap<>();
@@ -80,7 +80,7 @@ public class MapEngine {
   public void showRoute() {
     MessageCli.INSERT_SOURCE.printMessage();
 
-    String startCountry = null;
+    String startCountry;
 
     // Read the user input and validate it
     while (true) {
@@ -95,7 +95,7 @@ public class MapEngine {
       }
     }
 
-    String endCountry = null;
+    String endCountry;
     MessageCli.INSERT_DESTINATION.printMessage();
 
     // Read the user input and validate it
@@ -109,6 +109,12 @@ public class MapEngine {
       } catch (CountryNotFoundException e) {
         MessageCli.INVALID_COUNTRY.printMessage(endCountry);
       }
+    }
+
+    // Check if the start and end countries are the same
+    if (startCountry.equals(endCountry)) {
+      MessageCli.NO_CROSSBORDER_TRAVEL.printMessage();
+      return;
     }
   }
 
