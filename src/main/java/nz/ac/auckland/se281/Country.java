@@ -1,6 +1,6 @@
 package nz.ac.auckland.se281;
 
-/** This class represents a country */
+/** This class represents a country. */
 public class Country {
   private final String name;
   private final String continent;
