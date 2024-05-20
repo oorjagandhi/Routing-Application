@@ -9,6 +9,7 @@ import java.util.Set;
 /** This class is the main entry point. */
 public class MapEngine {
 
+  // Initialize the countriesMap and adjacencyMap
   private Map<String, Country> countriesMap;
   private Map<String, Set<String>> adjacencyMap;
 
@@ -40,9 +41,13 @@ public class MapEngine {
       String[] parts = line.split(",");
       String country1 = parts[0].trim();
       adjacencyMap.putIfAbsent(country1, new HashSet<>());
+
+      // Add the countries to the adjacencyMap
       for (int i = 1; i < parts.length; i++) {
         String country2 = parts[i].trim();
         adjacencyMap.putIfAbsent(country2, new HashSet<>());
+
+        // Make them adjacent to each other
         adjacencyMap.get(country1).add(country2);
         adjacencyMap.get(country2).add(country1);
       }
@@ -71,6 +76,7 @@ public class MapEngine {
 
   /** This method is invoked when the user run the command info-country. */
   private void validateCountryName(String countryName) throws CountryNotFoundException {
+    // Check if the country is not found
     if (!countriesMap.containsKey(countryName)) {
       throw new CountryNotFoundException(countryName);
     }
@@ -78,8 +84,8 @@ public class MapEngine {
 
   /** This method is invoked when the user run the command route. */
   public void showRoute() {
+    // Ask the user to insert the start and end countries
     MessageCli.INSERT_SOURCE.printMessage();
-
     String startCountry;
 
     // Read the user input and validate it
@@ -95,8 +101,9 @@ public class MapEngine {
       }
     }
 
-    String endCountry;
+    // Ask the user to insert the end country
     MessageCli.INSERT_DESTINATION.printMessage();
+    String endCountry;
 
     // Read the user input and validate it
     while (true) {
@@ -117,6 +124,4 @@ public class MapEngine {
       return;
     }
   }
-
-  /** This method is invoked when the user run the command route. */
 }
