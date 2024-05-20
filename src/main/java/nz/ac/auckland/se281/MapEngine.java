@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -132,6 +133,21 @@ public class MapEngine {
 
     List<String> route = findRoute(startCountry, endCountry);
     MessageCli.ROUTE_INFO.printMessage(route.toString());
+
+    Set<String> visitedContinents = new LinkedHashSet<>();
+    int totalTaxes = 0;
+    boolean isFirstCountry = true;
+    for (String countryName : route) {
+      Country country = countriesMap.get(countryName);
+      visitedContinents.add(country.getContinent());
+      if (!isFirstCountry) {
+        totalTaxes += country.getTaxFees();
+      }
+      isFirstCountry = false;
+    }
+
+    MessageCli.CONTINENT_INFO.printMessage(visitedContinents.toString());
+    MessageCli.TAX_INFO.printMessage(String.valueOf(totalTaxes));
   }
 
   /**
