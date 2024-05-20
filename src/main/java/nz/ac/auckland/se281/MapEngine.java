@@ -1,9 +1,12 @@
 package nz.ac.auckland.se281;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 
 /** This class is the main entry point. */
@@ -123,5 +126,48 @@ public class MapEngine {
       MessageCli.NO_CROSSBORDER_TRAVEL.printMessage();
       return;
     }
+
+    List<String> route = findRoute(startCountry, endCountry);
+    MessageCli.ROUTE_INFO.printMessage(route.toString());
+  }
+
+  private List<String> findRoute(String start, String end) {
+
+    Queue<String> queue = new LinkedList<>();
+    Map<String, String> predecessors = new HashMap<>();
+    Set<String> visited = new HashSet<>();
+
+    queue.add(start);
+    visited.add(start);
+
+    while (!queue.isEmpty()) {
+      String current = queue.poll();
+      Set<String> neighbors = adjacencyMap.get(current);
+
+      for (String neighbor : neighbors) {
+        if (!visited.contains(neighbor)) {
+          visited.add(neighbor);
+          predecessors.put(neighbor, current);
+
+          if (neighbor.equals(end)) {
+            return buildRoute(predecessors, start, end);
+          }
+        }
+      }
+    }
+
+    return Collections.emptyList();
+  }
+
+  private List<String> buildRoute(Map<String, String> predecessors, String start, String end) {
+    LinkedList<String> route = new LinkedList<>();
+    String step = end;
+
+    while (step != null) {
+      route.addFirst(step);
+      step = predecessors.get(step);
+    }
+
+    return route;
   }
 }
