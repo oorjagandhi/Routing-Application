@@ -131,8 +131,16 @@ public class MapEngine {
     MessageCli.ROUTE_INFO.printMessage(route.toString());
   }
 
+  /**
+   * This method is used to compute the route between two countries.
+   *
+   * @param start The start country.
+   * @param end The end country.
+   * @return The route between the two countries.
+   */
   private List<String> findRoute(String start, String end) {
 
+    // Initialize the queue, predecessors, visited
     Queue<String> queue = new LinkedList<>();
     Map<String, String> predecessors = new HashMap<>();
     Set<String> visited = new HashSet<>();
@@ -140,6 +148,7 @@ public class MapEngine {
     queue.add(start);
     visited.add(start);
 
+    // Traverse the graph using BFS
     while (!queue.isEmpty()) {
       String current = queue.poll();
       Set<String> neighbors = adjacencyMap.get(current);
@@ -156,13 +165,23 @@ public class MapEngine {
       }
     }
 
+    // If no route is found
     return Collections.emptyList();
   }
 
+  /**
+   * This method is used to build the route between two countries.
+   *
+   * @param predecessors The predecessors of the countries.
+   * @param start The start country.
+   * @param end The end country.
+   * @return The route between the two countries.
+   */
   private List<String> buildRoute(Map<String, String> predecessors, String start, String end) {
     LinkedList<String> route = new LinkedList<>();
     String step = end;
 
+    // Build the route by backtracking from the end to the start
     while (step != null) {
       route.addFirst(step);
       step = predecessors.get(step);
