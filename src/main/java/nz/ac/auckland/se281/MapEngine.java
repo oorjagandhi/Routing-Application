@@ -35,7 +35,8 @@ public class MapEngine {
   public void showInfoCountry() {
     MessageCli.INSERT_COUNTRY.printMessage();
     while (true) {
-      String countryName = Utils.scanner.nextLine();
+      String input = Utils.scanner.nextLine();
+      String countryName = Utils.capitalizeFirstLetterOfEachWord(input);
       try {
         validateCountryName(countryName);
         Country country = countriesMap.get(countryName);
