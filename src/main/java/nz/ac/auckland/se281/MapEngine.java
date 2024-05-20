@@ -157,6 +157,7 @@ public class MapEngine {
         if (!visited.contains(neighbor)) {
           visited.add(neighbor);
           predecessors.put(neighbor, current);
+          queue.add(neighbor);
 
           if (neighbor.equals(end)) {
             return buildRoute(predecessors, start, end);
