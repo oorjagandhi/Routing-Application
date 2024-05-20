@@ -35,7 +35,7 @@ public class MapEngine {
   public void showInfoCountry() {
     MessageCli.INSERT_COUNTRY.printMessage();
     while (true) {
-      String countryName = Utils.scanner.next();
+      String countryName = Utils.scanner.nextLine();
       try {
         validateCountryName(countryName);
         Country country = countriesMap.get(countryName);
