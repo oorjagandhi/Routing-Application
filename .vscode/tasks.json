@@ -24,6 +24,14 @@
 				"kind": "test",
 				"isDefault": true
 			}
-		}
+		},
+    {
+      "label": "run style tool",
+      "type": "shell",
+      "command": "./mvnw clean compile exec:java@style",
+      "windows": {
+          "command": ".\\mvnw.cmd clean compile exec:java@style"
+      }
+  }
 	]
 }
