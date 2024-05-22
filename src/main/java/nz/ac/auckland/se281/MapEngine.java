@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,16 +46,15 @@ public class MapEngine {
     for (String line : adjacencies) {
       String[] parts = line.split(",");
       String country1 = parts[0].trim();
-      adjacencyMap.putIfAbsent(country1, new HashSet<>());
+      adjacencyMap.putIfAbsent(country1, new LinkedHashSet<>());
 
       // Add the countries to the adjacencyMap
       for (int i = 1; i < parts.length; i++) {
         String country2 = parts[i].trim();
-        adjacencyMap.putIfAbsent(country2, new HashSet<>());
+        adjacencyMap.putIfAbsent(country2, new LinkedHashSet<>());
 
         // Make them adjacent to each other
         adjacencyMap.get(country1).add(country2);
-        adjacencyMap.get(country2).add(country1);
       }
     }
   }
@@ -162,7 +160,7 @@ public class MapEngine {
     // Initialize the queue, predecessors, visited
     Queue<String> queue = new LinkedList<>();
     Map<String, String> predecessors = new HashMap<>();
-    Set<String> visited = new HashSet<>();
+    List<String> visited = new LinkedList<>();
 
     queue.add(start);
     visited.add(start);
