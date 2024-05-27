@@ -1,10 +1,9 @@
 package nz.ac.auckland.se281;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -156,16 +155,14 @@ public class MapEngine {
    * @return The route between the two countries.
    */
   private List<String> findRoute(String start, String end) {
-
-    // Initialize the queue, predecessors, visited
     Queue<String> queue = new LinkedList<>();
     Map<String, String> predecessors = new HashMap<>();
-    List<String> visited = new LinkedList<>();
+    Set<String> visited = new HashSet<>();
 
     queue.add(start);
     visited.add(start);
+    predecessors.put(start, null); // Initialize the start with no predecessor
 
-    // Traverse the graph using BFS
     while (!queue.isEmpty()) {
       String current = queue.poll();
       Set<String> neighbors = adjacencyMap.get(current);
@@ -177,40 +174,18 @@ public class MapEngine {
           queue.add(neighbor);
 
           if (neighbor.equals(end)) {
-            return buildRoute(predecessors, start, end);
+            // Construct the route from end to start using the predecessors
+            List<String> routePath = new ArrayList<>();
+            for (String node = end; node != null; node = predecessors.get(node)) {
+              routePath.add(node);
+            }
+            Collections.reverse(routePath); // Reverse to show the route from start to end
+            return routePath;
           }
         }
       }
     }
 
-    // If no route is found
-    return Collections.emptyList();
-  }
-
-  /**
-   * This method is used to build the route between two countries.
-   *
-   * @param predecessors The predecessors of each country.
-   * @param start The start country.
-   * @param end The end country.
-   * @return The route between the two countries.
-   */
-  private List<String> buildRoute(Map<String, String> predecessors, String start, String end) {
-    Deque<String> stack = new ArrayDeque<>();
-    String step = end;
-
-    // Build the route by backtracking from the end to the start
-    while (step != null) {
-      stack.push(step);
-      step = predecessors.get(step);
-    }
-
-    // Transfer elements from stack to list
-    List<String> route = new ArrayList<>();
-    while (!stack.isEmpty()) {
-      route.add(stack.pop());
-    }
-
-    return route;
+    return Collections.emptyList(); // Return an empty list if no route is found
   }
 }
