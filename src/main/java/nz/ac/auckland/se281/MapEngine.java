@@ -176,11 +176,17 @@ public class MapEngine {
           if (neighbor.equals(end)) {
             // Construct the route from end to start using the predecessors
             List<String> routePath = new ArrayList<>();
-            for (String node = end; node != null; node = predecessors.get(node)) {
-              routePath.add(node);
+            String currentNode = end; // Start backtracking from the end node
+
+            while (currentNode != null) {
+              // Add the current node to the path
+              routePath.add(currentNode);
+              // Move to the next node in the path towards the start
+              currentNode = predecessors.get(currentNode);
             }
-            Collections.reverse(routePath); // Reverse to show the route from start to end
-            return routePath;
+
+            Collections.reverse(routePath); // The path was constructed backwards, so reverse it
+            return routePath; // Return the route from start to end
           }
         }
       }
