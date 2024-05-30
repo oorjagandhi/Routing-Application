@@ -1,6 +1,9 @@
 package nz.ac.auckland.se281;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 /** This class represents a graph. */
 public class Graph {
