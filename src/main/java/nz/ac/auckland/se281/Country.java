@@ -66,16 +66,21 @@ public class Country {
    * @return true if the countries are equal, false otherwise
    */
   @Override
+  // Equals method to compare name of countries.
   public boolean equals(Object obj) {
+    // Check if the object is the same as the country
     if (this == obj) {
       return true;
     }
+    // Check if the object is null
     if (obj == null) {
       return false;
     }
+    // Check if the object is an instance of the country
     if (getClass() != obj.getClass()) {
       return false;
     }
+    // Check if the name of the country is the same
     Country other = (Country) obj;
     if (name == null) {
       if (other.name != null) {
