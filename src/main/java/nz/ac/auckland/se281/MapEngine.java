@@ -15,14 +15,13 @@ import java.util.Set;
 public class MapEngine {
 
   // Initialize the countriesMap and adjacencyMap
-  private Map<String, Country> countriesMap;
-  private Map<String, Set<String>> adjacencyMap;
+  private final Map<String, Country> countriesMap;
+  private final Graph graph = new Graph();
 
   /** Constructor for the MapEngine class. */
   public MapEngine() {
     // add other code here if you want
     countriesMap = new HashMap<>();
-    adjacencyMap = new HashMap<>();
     loadMap(); // keep this mehtod invocation
   }
 
@@ -45,15 +44,14 @@ public class MapEngine {
     for (String line : adjacencies) {
       String[] parts = line.split(",");
       String country1 = parts[0].trim();
-      adjacencyMap.putIfAbsent(country1, new LinkedHashSet<>());
+      Country country = countriesMap.get(country1);
 
       // Add the countries to the adjacencyMap
       for (int i = 1; i < parts.length; i++) {
         String country2 = parts[i].trim();
-        adjacencyMap.putIfAbsent(country2, new LinkedHashSet<>());
-
+        Country adjCountry = countriesMap.get(country2);
         // Make them adjacent to each other
-        adjacencyMap.get(country1).add(country2);
+        graph.addEdge(country, adjCountry);
       }
     }
   }
@@ -128,14 +126,13 @@ public class MapEngine {
       return;
     }
 
-    List<String> route = findRoute(startCountry, endCountry);
+    List<Country> route = findRoute(startCountry, endCountry);
     MessageCli.ROUTE_INFO.printMessage(route.toString());
 
     Set<String> visitedContinents = new LinkedHashSet<>();
     int totalTaxes = 0;
     boolean isFirstCountry = true;
-    for (String countryName : route) {
-      Country country = countriesMap.get(countryName);
+    for (Country country : route) {
       visitedContinents.add(country.getContinent());
       if (!isFirstCountry) {
         totalTaxes += country.getTaxFees();
@@ -154,29 +151,30 @@ public class MapEngine {
    * @param end The end country.
    * @return The route between the two countries.
    */
-  private List<String> findRoute(String start, String end) {
-    Queue<String> queue = new LinkedList<>();
-    Map<String, String> predecessors = new HashMap<>();
-    Set<String> visited = new HashSet<>();
+  private List<Country> findRoute(String start, String end) {
+    Queue<Country> queue = new LinkedList<>();
+    Map<Country, Country> predecessors = new HashMap<>();
+    Set<Country> visited = new HashSet<>();
 
-    queue.add(start);
-    visited.add(start);
-    predecessors.put(start, null); // Initialize the start with no predecessor
+    Country startCountry = countriesMap.get(start);
+    Country endCountry = countriesMap.get(end);
+    queue.add(startCountry);
+    visited.add(startCountry);
+    predecessors.put(startCountry, null); // Initialize the start with no predecessor
 
     while (!queue.isEmpty()) {
-      String current = queue.poll();
-      Set<String> neighbors = adjacencyMap.get(current);
-
-      for (String neighbor : neighbors) {
+      Country current = queue.poll();
+      Set<Country> neighbors = graph.getAdjacentNodes(current);
+      for (Country neighbor : neighbors) {
         if (!visited.contains(neighbor)) {
           visited.add(neighbor);
           predecessors.put(neighbor, current);
           queue.add(neighbor);
 
-          if (neighbor.equals(end)) {
+          if (neighbor.equals(endCountry)) {
             // Construct the route from end to start using the predecessors
-            List<String> routePath = new ArrayList<>();
-            String currentNode = end; // Start backtracking from the end node
+            List<Country> routePath = new ArrayList<>();
+            Country currentNode = endCountry; // Start backtracking from the end node
 
             while (currentNode != null) {
               // Add the current node to the path

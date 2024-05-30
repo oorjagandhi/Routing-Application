@@ -45,4 +45,45 @@ public class Country {
   public int getTaxFees() {
     return taxFees;
   }
+
+  /**
+   * Get the hash code of the country.
+   *
+   * @return the hash code of the country
+   */
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((name == null) ? 0 : name.hashCode());
+    return result;
+  }
+
+  /**
+   * Check if two countries are equal.
+   *
+   * @param obj the object to compare
+   * @return true if the countries are equal, false otherwise
+   */
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
+    Country other = (Country) obj;
+    if (name == null) {
+      if (other.name != null) return false;
+    } else if (!name.equals(other.name)) return false;
+    return true;
+  }
+
+  /**
+   * Get the string representation of the country.
+   *
+   * @return the string representation of the country
+   */
+  @Override
+  public String toString() {
+    return name;
+  }
 }
