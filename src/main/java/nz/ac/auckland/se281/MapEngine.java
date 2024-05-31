@@ -59,18 +59,28 @@ public class MapEngine {
   /** This method is invoked when the user run the command info-country. */
   public void showInfoCountry() {
     MessageCli.INSERT_COUNTRY.printMessage();
-    // Read the user input and validate it
+    Country country = askForCountry();
+    MessageCli.COUNTRY_INFO.printMessage(
+        country.getName(), country.getContinent(), String.valueOf(country.getTaxFees()));
+  }
+
+  /**
+   * This method is used to ask the user to insert a country.
+   *
+   * @return The country object.
+   */
+  private Country askForCountry() {
     while (true) {
+      // Read the user input and validate it
       String input = Utils.scanner.nextLine();
       // Capitalize the first letter of each word
       String countryName = Utils.capitalizeFirstLetterOfEachWord(input);
+      // Check if the country is found
       try {
         validateCountryName(countryName);
-        Country country = countriesMap.get(countryName);
-        MessageCli.COUNTRY_INFO.printMessage(
-            country.getName(), country.getContinent(), String.valueOf(country.getTaxFees()));
-        break;
+        return countriesMap.get(countryName);
       } catch (CountryNotFoundException e) {
+        // Print the error message
         MessageCli.INVALID_COUNTRY.printMessage(countryName);
       }
     }
@@ -88,37 +98,11 @@ public class MapEngine {
   public void showRoute() {
     // Ask the user to insert the start and end countries
     MessageCli.INSERT_SOURCE.printMessage();
-    String startCountry;
-
-    // Read the user input and validate it
-    while (true) {
-      String input = Utils.scanner.nextLine();
-      // Capitalize the first letter of each word
-      startCountry = Utils.capitalizeFirstLetterOfEachWord(input);
-      try {
-        validateCountryName(startCountry);
-        break;
-      } catch (CountryNotFoundException e) {
-        MessageCli.INVALID_COUNTRY.printMessage(startCountry);
-      }
-    }
+    Country startCountry = askForCountry();
 
     // Ask the user to insert the end country
     MessageCli.INSERT_DESTINATION.printMessage();
-    String endCountry;
-
-    // Read the user input and validate it
-    while (true) {
-      String input2 = Utils.scanner.nextLine();
-      // Capitalize the first letter of each word
-      endCountry = Utils.capitalizeFirstLetterOfEachWord(input2);
-      try {
-        validateCountryName(endCountry);
-        break;
-      } catch (CountryNotFoundException e) {
-        MessageCli.INVALID_COUNTRY.printMessage(endCountry);
-      }
-    }
+    Country endCountry = askForCountry();
 
     // Check if the start and end countries are the same
     if (startCountry.equals(endCountry)) {
@@ -151,16 +135,14 @@ public class MapEngine {
    * @param end The end country.
    * @return The route between the two countries.
    */
-  private List<Country> findRoute(String start, String end) {
+  private List<Country> findRoute(Country start, Country end) {
     Queue<Country> queue = new LinkedList<>();
     Map<Country, Country> predecessors = new HashMap<>();
     Set<Country> visited = new HashSet<>();
 
-    Country startCountry = countriesMap.get(start);
-    Country endCountry = countriesMap.get(end);
-    queue.add(startCountry);
-    visited.add(startCountry);
-    predecessors.put(startCountry, null); // Initialize the start with no predecessor
+    queue.add(start);
+    visited.add(start);
+    predecessors.put(start, null); // Initialize the start with no predecessor
 
     while (!queue.isEmpty()) {
       Country current = queue.poll();
@@ -171,10 +153,10 @@ public class MapEngine {
           predecessors.put(neighbor, current);
           queue.add(neighbor);
 
-          if (neighbor.equals(endCountry)) {
+          if (neighbor.equals(end)) {
             // Construct the route from end to start using the predecessors
             List<Country> routePath = new ArrayList<>();
-            Country currentNode = endCountry; // Start backtracking from the end node
+            Country currentNode = end; // Start backtracking from the end node
 
             while (currentNode != null) {
               // Add the current node to the path
