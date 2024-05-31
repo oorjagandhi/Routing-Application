@@ -22,6 +22,7 @@ public class Graph {
    * @param to the country to
    */
   public void addEdge(Country from, Country to) {
+    // Add the from country to the adjacencyMap if it does not exist
     adjacencyMap.putIfAbsent(from, new LinkedHashSet<>());
     adjacencyMap.get(from).add(to);
   }
@@ -33,6 +34,7 @@ public class Graph {
    * @return the adjacent nodes of the country
    */
   public Set<Country> getAdjacentNodes(Country country) {
+    // Return the adjacent nodes of the country
     return adjacencyMap.get(country);
   }
 }
